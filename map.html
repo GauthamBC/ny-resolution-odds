@@ -1,0 +1,370 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>State Metric Map</title>
+</head>
+<body style="margin:0;background:#F3F4F6;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#0F172A;">
+
+<section class="vi-map-card brand-actionnetwork" style="width:100%;max-width:100%;margin:0;padding:0;">
+
+<style>
+.vi-map-card, .vi-map-card * { box-sizing:border-box; font-family:inherit; }
+
+.vi-map-card{
+  --accent:#16A34A;
+  --accent-soft:#DCFCE7;
+  --accent-softer:#F3FBF7;
+}
+
+/* Card container */
+.vi-map-shell{
+  background:#FFFFFF;
+  border-radius:0;
+  box-shadow:0 8px 24px rgba(15,23,42,.12);
+  border:1px solid rgba(148,163,184,.25);
+  padding:18px 18px 20px;
+
+  max-height: 100vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/* Scrollbar */
+.vi-map-shell{
+  scrollbar-width: thin;
+  scrollbar-color: var(--accent) transparent;
+}
+.vi-map-shell::-webkit-scrollbar{
+  width:6px;
+  height:6px;
+}
+.vi-map-shell::-webkit-scrollbar-track{
+  background:var(--accent-soft);
+  border-radius:999px;
+}
+.vi-map-shell::-webkit-scrollbar-thumb{
+  background:var(--accent);
+  border-radius:999px;
+}
+.vi-map-shell::-webkit-scrollbar-thumb:hover{
+  filter:brightness(0.9);
+}
+
+/* Top header: copy left, logo/link right */
+.vi-map-header{
+  margin-bottom:10px;
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:12px;
+}
+.vi-map-header-main{
+  flex:1 1 auto;
+  min-width:0;
+}
+.vi-map-brand-link{
+  flex-shrink:0;
+  display:inline-flex;
+  align-items:flex-start;
+  text-decoration:none;
+}
+.vi-map-brand-link img{
+  display:block;
+  max-width:140px;
+  height:auto;
+}
+.vi-map-brand-link img{
+  display:block;
+  max-width:140px;
+  height:auto;
+}
+
+/* Brand-tinted logos in the header */
+.vi-map-card.brand-actionnetwork .vi-map-brand-link img{
+  /* Action Network green */
+  filter:
+    brightness(0) saturate(100%)
+    invert(62%) sepia(23%) saturate(1250%) hue-rotate(78deg)
+    brightness(96%) contrast(92%);
+}
+
+.vi-map-card.brand-vegasinsider .vi-map-brand-link img{
+  /* VegasInsider yellow */
+  filter:
+    brightness(0) saturate(100%)
+    invert(72%) sepia(63%) saturate(652%) hue-rotate(6deg)
+    brightness(95%) contrast(101%);
+}
+
+.vi-map-card.brand-canadasb .vi-map-brand-link img{
+  /* Canada Sports Betting red */
+  filter:
+    brightness(0) saturate(100%)
+    invert(32%) sepia(85%) saturate(2386%) hue-rotate(347deg)
+    brightness(96%) contrast(104%);
+}
+
+.vi-map-card.brand-rotogrinders .vi-map-brand-link img{
+  /* RotoGrinders blue */
+  filter:
+    brightness(0) saturate(100%)
+    invert(23%) sepia(95%) saturate(1704%) hue-rotate(203deg)
+    brightness(93%) contrast(96%);
+}
+
+/* Strapline + title + subtitle */
+.vi-map-strapline{
+  font-size:11px;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  color:#64748B;
+  font-weight:700;
+}
+.vi-map-title{
+  margin:6px 0 4px;
+  font-size:clamp(22px,2.6vw,26px);
+  line-height:1.1;
+  font-weight:800;
+  color:var(--accent);
+}
+.vi-map-subtitle{
+  margin:0;
+  font-size:13px;
+  color:#4B5563;
+}
+
+/* Gradient legend */
+.vi-map-legend-labels{
+  display:flex;
+  justify-content:space-between;
+  font-size:11px;
+  text-transform:uppercase;
+  font-weight:600;
+  color:#6B7280;
+  margin:14px 2px 4px;
+}
+.vi-map-legend-bar{
+  height:6px;
+  border-radius:999px;
+  background:linear-gradient(90deg,#BBF7D0,#4ADE80,#166534);
+  overflow:hidden;
+}
+
+/* Map frame */
+.vi-map-frame{
+  margin-top:14px;
+  border-radius:16px;
+  background:#F9FAFB;
+  border:1px solid #E5E7EB;
+  overflow:hidden;
+}
+
+/* Tables & tabs */
+.vi-map-section-sub{
+  margin:0 0 10px;
+  font-size:12px;
+  color:#6B7280;
+  padding-left:10px;
+  border-left:3px solid var(--accent-soft);
+}
+
+.vi-tab-header{
+  display:inline-flex;
+  gap:6px;
+  margin:20px 0 6px;
+  padding:3px;
+  background:rgba(15,23,42,.02);
+  border-radius:999px;
+  border:1px solid rgba(148,163,184,.35);
+}
+.vi-tab-header .vi-tab{
+  border:0;
+  background:transparent;
+  border-radius:999px;
+  padding:6px 14px;
+  font-size:12px;
+  font-weight:600;
+  color:#6B7280;
+  cursor:pointer;
+  transition:background-color .18s.ease, color .18s.ease, box-shadow .18s.ease, transform .06s.ease;
+}
+.vi-tab-header .vi-tab.is-active{
+  background:var(--accent);
+  color:#FFFFFF;
+  box-shadow:0 3px 8px rgba(15,23,42,.2);
+  transform:translateY(-0.5px);
+}
+.vi-tab-header .vi-tab:hover:not(.is-active){
+  background:var(--accent-soft);
+  color:#111827;
+}
+.vi-tab-header .vi-tab:focus-visible{
+  outline:none;
+  box-shadow:0 0 0 2px var(--accent-soft),0 0 0 4px rgba(15,23,42,.25);
+}
+
+.vi-tab-panel{
+  margin-top:6px;
+}
+
+/* Tables */
+.vi-map-table{
+  width:100%;
+  border-collapse:collapse;
+  font-size:13px;
+  color:#111827;
+}
+.vi-map-table thead th{
+  text-align:left;
+  padding:8px 10px;
+  font-size:11px;
+  text-transform:uppercase;
+  letter-spacing:.06em;
+  color:var(--accent);
+  background:var(--accent-soft);
+  border-bottom:1px solid rgba(148,163,184,.35);
+}
+.vi-map-table tbody tr:nth-child(odd){
+  background:#FFFFFF;
+}
+.vi-map-table tbody tr:nth-child(even){
+  background:var(--accent-softer);
+}
+.vi-map-table tbody tr:hover{
+  background:var(--accent-soft);
+  filter:brightness(0.96);
+  transition:background-color .15s ease, filter .15s.ease;
+}
+.vi-map-table tbody td{
+  padding:7px 10px;
+  vertical-align:middle;
+}
+
+/* Rank pill */
+.vi-rank-pill{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-width:22px;
+  height:22px;
+  padding:0 7px;
+  border-radius:999px;
+  font-size:11px;
+  font-weight:600;
+  background:var(--accent);
+  color:#FFFFFF;
+}
+</style>
+
+<div class="vi-map-shell">
+
+  <header class="vi-map-header">
+    <div class="vi-map-header-main">
+      <div class="vi-map-strapline">ACTION NETWORK · DATA VISUALIZATION</div>
+      <h1 class="vi-map-title">State Metric Map</h1>
+      <p class="vi-map-subtitle">Visualizing your selected metric by U.S. state.</p>
+    </div>
+    <a href="https://www.actionnetwork.com/" target="_blank" rel="noopener noreferrer" class="vi-map-brand-link">
+      <img src="https://i.postimg.cc/x1nG117r/AN-final2-logo.png"
+           alt="Action Network logo"
+           width="140"
+           height="32"
+           loading="lazy"
+           decoding="async" />
+    </a>
+  </header>
+
+  <div class="vi-map-legend">
+    <div class="vi-map-legend-labels">
+      <span>Lowest value</span>
+      <span>Highest value</span>
+    </div>
+    <div class="vi-map-legend-bar"></div>
+  </div>
+
+  <!-- Interactive map -->
+  <div class="vi-map-frame">
+    <div>                        <script type="text/javascript">window.PlotlyConfig = {MathJaxConfig: 'local'};</script>
+        <script charset="utf-8" src="https://cdn.plot.ly/plotly-3.3.0.min.js" integrity="sha256-bO3dS6yCpk9aK4gUpNELtCiDeSYvGYnK7jFI58NQnHI=" crossorigin="anonymous"></script>                <div id="0d327a58-4a80-428a-a40c-98feec32bb1d" class="plotly-graph-div" style="height:100%; width:100%;"></div>            <script type="text/javascript">                window.PLOTLYENV=window.PLOTLYENV || {};                                if (document.getElementById("0d327a58-4a80-428a-a40c-98feec32bb1d")) {                    Plotly.newPlot(                        "0d327a58-4a80-428a-a40c-98feec32bb1d",                        [{"coloraxis":"coloraxis","customdata":[["Louisiana",1,"South",30.93,223,46.0,36.5,29.14,3.17],["Nebraska",2,"Midwest",29.87,235,47.0,33.2,26.71,4.63],["Alabama",3,"South",28.96,245,46.0,34.7,23.14,5.44],["Mississippi",4,"South",28.43,252,44.5,34.9,26.71,4.67],["Massachusetts",5,"Northeast",27.51,264,44.0,33.4,23.57,6.18],["Arkansas",6,"South",26.59,276,41.0,34.9,24.57,4.75],["Texas",7,"South",25.81,287,42.0,35.8,26.43,8.29],["Oklahoma",8,"South",25.51,292,41.5,35.0,26.71,5.04],["Montana",9,"West",25.45,293,41.0,32.7,22.86,4.32],["Kansas",10,"Midwest",24.77,304,42.0,33.3,22.43,6.36],["Wisconsin",11,"Midwest",24.16,314,41.5,32.6,32.86,3.86],["West Virginia",12,"South",23.95,318,42.0,35.1,25.43,1.41],["Wyoming",13,"West",23.75,321,40.0,34.5,26.43,4.33],["Missouri",14,"Midwest",23.57,324,41.0,33.2,25.14,6.84],["Colorado",15,"West",23.12,333,37.0,33.3,38.43,5.2],["Washington",16,"West",22.5,344,38.0,34.2,31.43,2.77],["North Carolina",17,"South",22.43,346,39.5,33.9,33.57,5.28],["New Mexico",18,"West",21.81,358,38.5,33.4,22.0,2.91],["Kentucky",19,"South",21.66,362,37.5,35.0,31.14,2.9],["Oregon",20,"West",21.49,366,36.0,33.9,23.43,4.02],["Ohio",21,"Midwest",20.96,377,39.0,34.1,23.57,5.73],["Tennessee",22,"South",20.86,380,38.5,34.6,30.86,5.45],["Pennsylvania",23,"Northeast",20.8,381,39.5,34.1,16.43,1.59],["Utah",24,"West",20.73,382,38.5,33.2,35.71,2.27],["Maine",25,"Northeast",20.47,388,35.5,33.3,33.14,7.74],["Vermont",26,"Northeast",20.34,392,34.0,33.6,23.0,5.61],["Virginia",27,"South",20.08,398,38.5,33.9,30.71,0.19],["Illinois",28,"Midwest",19.73,407,37.5,33.4,24.43,4.58],["North Dakota",29,"Midwest",18.92,429,36.5,35.2,37.86,3.29],["Alaska",30,"West",18.68,435,34.5,33.9,22.71,3.86],["Florida",31,"South",17.99,456,37.5,34.2,22.29,5.13],["Iowa",32,"Midwest",17.87,460,35.5,34.0,22.0,6.3],["Maryland",33,"South",17.68,466,38.0,33.3,22.14,6.97],["Arizona",34,"West",17.27,479,35.5,35.1,24.57,1.55],["Hawaii",35,"West",17.22,481,37.5,33.0,30.29,5.96],["Minnesota",36,"Midwest",17.22,481,33.0,33.1,17.14,3.43],["New Jersey",37,"Northeast",17.1,485,38.5,33.5,22.14,-0.45],["Delaware",38,"South",16.11,521,37.5,32.1,20.57,2.73],["Rhode Island",39,"Northeast",16.1,521,35.0,33.2,20.86,3.85],["Idaho",40,"West",15.92,528,33.0,34.1,21.0,2.42],["California",41,"West",14.52,589,34.0,33.8,22.14,3.84],["Georgia",42,"South",14.38,595,36.5,34.3,24.43,3.0],["New Hampshire",43,"Northeast",14.34,597,32.5,33.3,24.14,4.65],["New York",44,"Northeast",13.75,627,33.0,32.8,26.86,3.77],["Michigan",45,"Midwest",13.68,632,31.5,34.0,12.57,2.12],["Indiana",46,"Midwest",13.21,657,32.5,33.8,27.29,1.7],["South Carolina",47,"South",12.35,709,31.5,33.8,27.71,4.0],["South Dakota",48,"Midwest",11.85,744,29.5,33.3,22.57,4.45],["Nevada",49,"West",8.81,1035,29.0,34.2,19.86,4.9],["Connecticut",50,"Northeast",8.79,1037,28.0,33.5,21.29,2.16]],"geo":"geo","hovertemplate":"\u003cspan style='font-weight:600;color:#16A34A;'\u003e%{customdata[0]} (%{location})\u003c\u002fspan\u003e\u003cbr\u003e\u003cspan style='color:#16A34A;font-weight:500;'\u003eRank:\u003c\u002fspan\u003e %{customdata[1]}\u003cbr\u003e\u003cspan style='color:#16A34A;font-weight:500;'\u003eRegions:\u003c\u002fspan\u003e %{customdata[2]}\u003cbr\u003e\u003cspan style='color:#16A34A;font-weight:500;'\u003eImplied Probability Of Breaking A Resolution (%):\u003c\u002fspan\u003e %{customdata[3]}\u003cbr\u003e\u003cspan style='color:#16A34A;font-weight:500;'\u003eAmerican Odds (Moneyline):\u003c\u002fspan\u003e %{customdata[4]}\u003cbr\u003e\u003cspan style='color:#16A34A;font-weight:500;'\u003eResolution Break Rate (%):\u003c\u002fspan\u003e %{customdata[5]}\u003cbr\u003e\u003cspan style='color:#16A34A;font-weight:500;'\u003eAverage Weekly Work Hours:\u003c\u002fspan\u003e %{customdata[6]}\u003cbr\u003e\u003cspan style='color:#16A34A;font-weight:500;'\u003eStress &amp; Well-Being Rank (1 = Best):\u003c\u002fspan\u003e %{customdata[7]}\u003cbr\u003e\u003cspan style='color:#16A34A;font-weight:500;'\u003eDrop In Self-Improvement Searches (%):\u003c\u002fspan\u003e %{customdata[8]}\u003cextra\u003e\u003c\u002fextra\u003e","locationmode":"USA-states","locations":["LA","NE","AL","MS","MA","AR","TX","OK","MT","KS","WI","WV","WY","MO","CO","WA","NC","NM","KY","OR","OH","TN","PA","UT","ME","VT","VA","IL","ND","AK","FL","IA","MD","AZ","HI","MN","NJ","DE","RI","ID","CA","GA","NH","NY","MI","IN","SC","SD","NV","CT"],"name":"","z":{"dtype":"i1","bdata":"AQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyAhIiMkJSYnKCkqKywtLi8wMTI="},"type":"choropleth","hoverlabel":{"font":{"color":"#111827","size":12},"align":"left","bgcolor":"#FFFFFF","bordercolor":"rgba(15,23,42,0.18)","namelength":-1},"marker":{"line":{"color":"#F9FAFB","width":1}},"showlegend":false}],                        {"template":{"data":{"candlestick":[{"decreasing":{"line":{"color":"#000033"}},"increasing":{"line":{"color":"#000032"}},"type":"candlestick"}],"contourcarpet":[{"colorscale":[[0.0,"#000011"],[0.1111111111111111,"#000012"],[0.2222222222222222,"#000013"],[0.3333333333333333,"#000014"],[0.4444444444444444,"#000015"],[0.5555555555555556,"#000016"],[0.6666666666666666,"#000017"],[0.7777777777777778,"#000018"],[0.8888888888888888,"#000019"],[1.0,"#000020"]],"type":"contourcarpet"}],"contour":[{"colorscale":[[0.0,"#000011"],[0.1111111111111111,"#000012"],[0.2222222222222222,"#000013"],[0.3333333333333333,"#000014"],[0.4444444444444444,"#000015"],[0.5555555555555556,"#000016"],[0.6666666666666666,"#000017"],[0.7777777777777778,"#000018"],[0.8888888888888888,"#000019"],[1.0,"#000020"]],"type":"contour"}],"heatmap":[{"colorscale":[[0.0,"#000011"],[0.1111111111111111,"#000012"],[0.2222222222222222,"#000013"],[0.3333333333333333,"#000014"],[0.4444444444444444,"#000015"],[0.5555555555555556,"#000016"],[0.6666666666666666,"#000017"],[0.7777777777777778,"#000018"],[0.8888888888888888,"#000019"],[1.0,"#000020"]],"type":"heatmap"}],"histogram2d":[{"colorscale":[[0.0,"#000011"],[0.1111111111111111,"#000012"],[0.2222222222222222,"#000013"],[0.3333333333333333,"#000014"],[0.4444444444444444,"#000015"],[0.5555555555555556,"#000016"],[0.6666666666666666,"#000017"],[0.7777777777777778,"#000018"],[0.8888888888888888,"#000019"],[1.0,"#000020"]],"type":"histogram2d"}],"icicle":[{"textfont":{"color":"white"},"type":"icicle"}],"sankey":[{"textfont":{"color":"#000036"},"type":"sankey"}],"scatter":[{"marker":{"line":{"width":0}},"type":"scatter"}],"table":[{"cells":{"fill":{"color":"#000038"},"font":{"color":"#000037"},"line":{"color":"#000039"}},"header":{"fill":{"color":"#000040"},"font":{"color":"#000036"},"line":{"color":"#000039"}},"type":"table"}],"waterfall":[{"connector":{"line":{"color":"#000036","width":2}},"decreasing":{"marker":{"color":"#000033"}},"increasing":{"marker":{"color":"#000032"}},"totals":{"marker":{"color":"#000034"}},"type":"waterfall"}]},"layout":{"coloraxis":{"colorscale":[[0.0,"#000011"],[0.1111111111111111,"#000012"],[0.2222222222222222,"#000013"],[0.3333333333333333,"#000014"],[0.4444444444444444,"#000015"],[0.5555555555555556,"#000016"],[0.6666666666666666,"#000017"],[0.7777777777777778,"#000018"],[0.8888888888888888,"#000019"],[1.0,"#000020"]]},"colorscale":{"diverging":[[0.0,"#000021"],[0.1,"#000022"],[0.2,"#000023"],[0.3,"#000024"],[0.4,"#000025"],[0.5,"#000026"],[0.6,"#000027"],[0.7,"#000028"],[0.8,"#000029"],[0.9,"#000030"],[1.0,"#000031"]],"sequential":[[0.0,"#000011"],[0.1111111111111111,"#000012"],[0.2222222222222222,"#000013"],[0.3333333333333333,"#000014"],[0.4444444444444444,"#000015"],[0.5555555555555556,"#000016"],[0.6666666666666666,"#000017"],[0.7777777777777778,"#000018"],[0.8888888888888888,"#000019"],[1.0,"#000020"]],"sequentialminus":[[0.0,"#000011"],[0.1111111111111111,"#000012"],[0.2222222222222222,"#000013"],[0.3333333333333333,"#000014"],[0.4444444444444444,"#000015"],[0.5555555555555556,"#000016"],[0.6666666666666666,"#000017"],[0.7777777777777778,"#000018"],[0.8888888888888888,"#000019"],[1.0,"#000020"]]},"colorway":["#000001","#000002","#000003","#000004","#000005","#000006","#000007","#000008","#000009","#000010"]}},"geo":{"domain":{"x":[0.0,1.0],"y":[0.0,1.0]},"center":{},"scope":"usa","bgcolor":"#F9FAFB","lakecolor":"#F9FAFB","showlakes":false,"showland":true,"landcolor":"#F3F4F6","showframe":false,"showcoastlines":false,"showcountries":false},"coloraxis":{"colorbar":{"title":{"text":"Rank"}},"colorscale":[[0.0,"#BBF7D0"],[0.5,"#4ADE80"],[1.0,"#166534"]],"showscale":false},"legend":{"tracegroupgap":0},"margin":{"t":0,"l":0,"r":0,"b":0},"paper_bgcolor":"#F9FAFB","plot_bgcolor":"#F9FAFB","showlegend":false},                        {"displayModeBar": false, "responsive": true, "scrollZoom": false}                    )                };            </script>        </div>
+  </div>
+
+  <!-- Tabbed tables -->
+  <section class="vi-map-tables" style="margin-top:4px;">
+    <div class="vi-tab-header" role="tablist" aria-label="State rankings">
+      <button class="vi-tab is-active" data-tab="high" role="tab" aria-selected="true" tabindex="0">
+        States With the Highest Values
+      </button>
+      <button class="vi-tab" data-tab="low" role="tab" aria-selected="false" tabindex="-1">
+        States With the Lowest Values
+      </button>
+    </div>
+
+    <p class="vi-map-section-sub vi-map-section-sub-tab" data-tab="high">Ranked by the selected metric.</p>
+    <p class="vi-map-section-sub vi-map-section-sub-tab" data-tab="low" style="display:none;">Ranked by the selected metric.</p>
+
+    <div class="vi-tab-panel" data-panel="high">
+      
+<table class="vi-map-table">
+  <thead>
+    <tr><th scope="col">Rank</th><th scope="col">State</th><th scope="col">Rank</th><th scope="col"> Regions</th><th scope="col">Implied Probability of Breaking a Resolution (%)</th><th scope="col">American Odds (Moneyline)</th><th scope="col">Resolution Break Rate (%)</th><th scope="col">Average Weekly Work Hours </th><th scope="col">Stress &amp; Well-Being Rank (1 = Best)</th><th scope="col">Drop in Self-Improvement Searches (%)</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><span class="vi-rank-pill">1</span></td><td>Connecticut</td><td>50</td><td>Northeast</td><td>8.79</td><td>1037</td><td>28.0</td><td>33.5</td><td>21.29</td><td>2.16</td></tr><tr><td><span class="vi-rank-pill">2</span></td><td>Nevada</td><td>49</td><td>West</td><td>8.81</td><td>1035</td><td>29.0</td><td>34.2</td><td>19.86</td><td>4.9</td></tr><tr><td><span class="vi-rank-pill">3</span></td><td>South Dakota</td><td>48</td><td>Midwest</td><td>11.85</td><td>744</td><td>29.5</td><td>33.3</td><td>22.57</td><td>4.45</td></tr><tr><td><span class="vi-rank-pill">4</span></td><td>South Carolina</td><td>47</td><td>South</td><td>12.35</td><td>709</td><td>31.5</td><td>33.8</td><td>27.71</td><td>4.0</td></tr><tr><td><span class="vi-rank-pill">5</span></td><td>Indiana</td><td>46</td><td>Midwest</td><td>13.21</td><td>657</td><td>32.5</td><td>33.8</td><td>27.29</td><td>1.7</td></tr><tr><td><span class="vi-rank-pill">6</span></td><td>Michigan</td><td>45</td><td>Midwest</td><td>13.68</td><td>632</td><td>31.5</td><td>34.0</td><td>12.57</td><td>2.12</td></tr><tr><td><span class="vi-rank-pill">7</span></td><td>New York</td><td>44</td><td>Northeast</td><td>13.75</td><td>627</td><td>33.0</td><td>32.8</td><td>26.86</td><td>3.77</td></tr><tr><td><span class="vi-rank-pill">8</span></td><td>New Hampshire</td><td>43</td><td>Northeast</td><td>14.34</td><td>597</td><td>32.5</td><td>33.3</td><td>24.14</td><td>4.65</td></tr><tr><td><span class="vi-rank-pill">9</span></td><td>Georgia</td><td>42</td><td>South</td><td>14.38</td><td>595</td><td>36.5</td><td>34.3</td><td>24.43</td><td>3.0</td></tr><tr><td><span class="vi-rank-pill">10</span></td><td>California</td><td>41</td><td>West</td><td>14.52</td><td>589</td><td>34.0</td><td>33.8</td><td>22.14</td><td>3.84</td></tr>
+  </tbody>
+</table>
+
+    </div>
+    <div class="vi-tab-panel" data-panel="low" style="display:none;">
+      
+<table class="vi-map-table">
+  <thead>
+    <tr><th scope="col">Rank</th><th scope="col">State</th><th scope="col">Rank</th><th scope="col"> Regions</th><th scope="col">Implied Probability of Breaking a Resolution (%)</th><th scope="col">American Odds (Moneyline)</th><th scope="col">Resolution Break Rate (%)</th><th scope="col">Average Weekly Work Hours </th><th scope="col">Stress &amp; Well-Being Rank (1 = Best)</th><th scope="col">Drop in Self-Improvement Searches (%)</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><span class="vi-rank-pill">1</span></td><td>Louisiana</td><td>1</td><td>South</td><td>30.93</td><td>223</td><td>46.0</td><td>36.5</td><td>29.14</td><td>3.17</td></tr><tr><td><span class="vi-rank-pill">2</span></td><td>Nebraska</td><td>2</td><td>Midwest</td><td>29.87</td><td>235</td><td>47.0</td><td>33.2</td><td>26.71</td><td>4.63</td></tr><tr><td><span class="vi-rank-pill">3</span></td><td>Alabama</td><td>3</td><td>South</td><td>28.96</td><td>245</td><td>46.0</td><td>34.7</td><td>23.14</td><td>5.44</td></tr><tr><td><span class="vi-rank-pill">4</span></td><td>Mississippi</td><td>4</td><td>South</td><td>28.43</td><td>252</td><td>44.5</td><td>34.9</td><td>26.71</td><td>4.67</td></tr><tr><td><span class="vi-rank-pill">5</span></td><td>Massachusetts</td><td>5</td><td>Northeast</td><td>27.51</td><td>264</td><td>44.0</td><td>33.4</td><td>23.57</td><td>6.18</td></tr><tr><td><span class="vi-rank-pill">6</span></td><td>Arkansas</td><td>6</td><td>South</td><td>26.59</td><td>276</td><td>41.0</td><td>34.9</td><td>24.57</td><td>4.75</td></tr><tr><td><span class="vi-rank-pill">7</span></td><td>Texas</td><td>7</td><td>South</td><td>25.81</td><td>287</td><td>42.0</td><td>35.8</td><td>26.43</td><td>8.29</td></tr><tr><td><span class="vi-rank-pill">8</span></td><td>Oklahoma</td><td>8</td><td>South</td><td>25.51</td><td>292</td><td>41.5</td><td>35.0</td><td>26.71</td><td>5.04</td></tr><tr><td><span class="vi-rank-pill">9</span></td><td>Montana</td><td>9</td><td>West</td><td>25.45</td><td>293</td><td>41.0</td><td>32.7</td><td>22.86</td><td>4.32</td></tr><tr><td><span class="vi-rank-pill">10</span></td><td>Kansas</td><td>10</td><td>Midwest</td><td>24.77</td><td>304</td><td>42.0</td><td>33.3</td><td>22.43</td><td>6.36</td></tr>
+  </tbody>
+</table>
+
+    </div>
+  </section>
+
+</div>
+
+<script>
+(function(){
+  var widgets = document.querySelectorAll('.vi-map-card');
+  widgets.forEach(function(root){
+    var tabs = root.querySelectorAll('.vi-tab-header .vi-tab');
+    var panels = root.querySelectorAll('.vi-tab-panel');
+    var subs = root.querySelectorAll('.vi-map-section-sub-tab');
+    if (!tabs.length) return;
+
+    tabs.forEach(function(btn){
+      btn.addEventListener('click', function(){
+        var target = this.getAttribute('data-tab');
+
+        tabs.forEach(function(b){
+          var active = b === btn;
+          b.classList.toggle('is-active', active);
+          b.setAttribute('aria-selected', active ? 'true' : 'false');
+          b.setAttribute('tabindex', active ? '0' : '-1');
+        });
+
+        panels.forEach(function(p){
+          p.style.display = (p.getAttribute('data-panel') === target) ? 'block' : 'none';
+        });
+
+        subs.forEach(function(s){
+          s.style.display = (s.getAttribute('data-tab') === target) ? 'block' : 'none';
+        });
+      });
+    });
+  });
+})();
+</script>
+
+</section>
+</body>
+</html>
